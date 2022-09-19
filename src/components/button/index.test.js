@@ -4,29 +4,26 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import MyButton from "./index";
 
 describe("Button", () => {
-  test("renders correctly", () => {
+  it("renders correctly", () => {
     render(<MyButton>Button</MyButton>);
     const button = screen.getByRole("button");
-
     expect(button).toBeInTheDocument();
   });
 
-  test("Snapshot", () => {
+  it("Snapshot", () => {
     const { container } = render(<MyButton>Button</MyButton>);
-
     expect(container).toMatchSnapshot();
   });
 
-  test("onClick props", () => {
+  it("onClick props", () => {
     const onClick = jest.fn();
     render(<MyButton onClick={onClick}>Button</MyButton>);
 
     fireEvent.click(screen.getByRole("button"));
-
     expect(onClick).toHaveBeenCalledTimes(1);
   });
 
-  test("disabled state", () => {
+  it("disabled state", () => {
     const onClick = jest.fn();
     render(
       <MyButton id="my-button" disabled={true} onClick={onClick}>
@@ -35,9 +32,7 @@ describe("Button", () => {
     );
 
     expect(screen.getByRole("button")).toBeDisabled();
-
     fireEvent.click(screen.getByRole("button"));
-
     expect(onClick).toHaveBeenCalledTimes(0);
   });
 });

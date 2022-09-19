@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import { Navigate } from "react-router-dom";
 import MyButton from "../components/button";
 import Input from "../components/input";
-import Wrapper from "../components/layout/wrapper/Wrapper";
 import { BASE_URL } from "../config/url";
+import axios from "axios";
 
 function AddPost() {
   const [data, setData] = useState(null);
@@ -16,24 +15,12 @@ function AddPost() {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await fetch(`${BASE_URL}/posts`, {
-        method: "POST",
-        body: JSON.stringify({
-          title: "foo",
-          body: "bar",
-          userId: 1,
-        }),
-        headers: {
-          "Content-type": "application/json; charset=UTF-8",
-        },
-      });
-      if (!response.ok) {
-        throw new Error(
-          `This is an HTTP error: The status is ${response.status}`
-        );
-      }
-      const actualData = await response.json();
-      setData(actualData);
+      const response = await axios.post(
+        `${BASE_URL}/posts`,
+        { title, body, userId },
+        { headers: { "Content-type": "application/json; charset=UTF-8" } }
+      );
+      alert(JSON.stringify(response.data));
     } catch (err) {
       console.error(err.message);
     } finally {
@@ -42,46 +29,45 @@ function AddPost() {
   };
 
   return (
-    <Wrapper>
-      {data && <Navigate to="/" replace={true} />}
-      <form
-        style={{
-          padding: "2rem",
-          border: ".5px solid #ccc",
-          margin: "4rem 2rem",
-        }}
-        onSubmit={handleSubmit}
-      >
-        <h4>Add Post</h4>
-        <Input
-          onChange={(e) => setTitle(e.target.value)}
-          value={title}
-          required
-          name="title"
-          label="Title"
-        />
-        <Input
-          onChange={(e) => setBody(e.target.value)}
-          value={body}
-          required
-          name="body"
-          label="Body"
-        />
-        <Input
-          onChange={(e) => setUserId(e.target.value)}
-          value={userId}
-          type="number"
-          required
-          name="userId"
-          label="User ID"
-        />
-        {loading ? (
-          <center>loading...</center>
-        ) : (
-          <MyButton type="submit">+ ADD</MyButton>
-        )}
-      </form>
-    </Wrapper>
+    <form
+      style={{
+        padding: "2rem",
+        border: ".5px solid #ccc",
+        margin: "4rem 2rem",
+      }}
+      onSubmit={handleSubmit}
+      data-testid="my-form"
+    >
+      <h4>Add Post</h4>
+      <Input
+        onChange={(e) => setTitle(e.target.value)}
+        value={title}
+        required
+        name="title"
+        data-testid="title"
+        label="Title"
+      />
+      <Input
+        onChange={(e) => setBody(e.target.value)}
+        value={body}
+        required
+        name="body"
+        data-testid="body"
+        label="Body"
+      />
+      <Input
+        onChange={(e) => setUserId(e.target.value)}
+        value={userId}
+        type="number"
+        required
+        name="userId"
+        data-testid="userId"
+        label="User ID"
+      />
+      <MyButton data-testid="add" type="submit" disabled={loading}>
+        {loading ? "loading..." : "ADD"}
+      </MyButton>
+    </form>
   );
 }
 

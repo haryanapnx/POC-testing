@@ -5,7 +5,7 @@ function Input({ label, name, ...props }) {
   return (
     <>
       <label htmlFor={name}>{label}</label>
-      <input className="my-input" {...props} />
+      <input id={name} className="my-input" {...props} />
     </>
   );
 }

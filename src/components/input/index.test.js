@@ -5,7 +5,6 @@ import userEvent from "@testing-library/user-event";
 import Input from "./index";
 
 describe("Input", () => {
-
   test("Snapshot", () => {
     const { container } = render(<Input />);
 
@@ -63,5 +62,4 @@ describe("Input", () => {
     expect(handleChange).toHaveBeenCalledTimes(value.length);
     expect(input).toHaveValue(value);
   });
-
 });

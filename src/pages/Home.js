@@ -1,38 +1,36 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import Card from "../components/card";
-import Wrapper from "../components/layout/wrapper/Wrapper";
 import { BASE_URL } from "../config/url";
 import { titleCase } from "../utils/convertTitleCase";
-
 
 function Home() {
   const [list, setList] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const getData = async () => {
-    try {
-      const response = await fetch(`${BASE_URL}/posts`);
-      if (!response.ok) {
-        throw new Error(
-          `This is an HTTP error: The status is ${response.status}`
-        );
-      }
-      const actualData = await response.json();
-      setList(actualData);
-    } catch (err) {
-      console.error(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
+  
   useEffect(() => {
+    const getData = async () => {
+      try {
+        const response = await axios.get(`${BASE_URL}/posts`);
+        setList(response.data);
+        setError(null);
+      } catch (err) {
+        setError(err.message);
+        setList([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+  
     getData();
   }, []);
 
   return (
-    <Wrapper>
-      {loading && <div>A moment please...</div>}
+    <div>
+      {loading && <div data-testid="loading">A moment please...</div>}
+      {error && <div data-testid="error">{`Problem fetching the post data - ${error}`}</div>}
       {list.length > 0 &&
         list.map((item, i) => (
           <Card key={i}>
@@ -40,7 +38,7 @@ function Home() {
             <div>{item.body}</div>
           </Card>
         ))}
-    </Wrapper>
+    </div>
   );
 }
 
