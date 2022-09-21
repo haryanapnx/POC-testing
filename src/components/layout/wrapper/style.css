@@ -1,0 +1,15 @@
+.App {
+  display: block;
+  margin-inline: auto;
+  width: 480px;
+}
+
+.wrapper{
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  height: 105vh;
+  padding-bottom: 56px;
+  overflow-y: auto;
+}
+
